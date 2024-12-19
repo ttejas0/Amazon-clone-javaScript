@@ -131,7 +131,14 @@ document.querySelectorAll('.js-add-to-cart')
                 });
             }
 
-           
-           console.log(cart);
+            let cartQuantity = 0;
+
+            // Calculating cart quantity by looping the cart array
+            cart.forEach((item) =>{
+                cartQuantity += item.quantity;
+            });
+
+           document.querySelector('.js-cart-quantity')
+            .innerHTML = cartQuantity;
         });
     });
