@@ -1,3 +1,5 @@
+import { cart } from "../data/cart.js";
+
 /*
 
 //saved all the details of the products in javaScript.
@@ -43,6 +45,7 @@ const products = [{
 
 
 */
+
 
 //👇 Accumulator pattern
 let productsHTML = '';
