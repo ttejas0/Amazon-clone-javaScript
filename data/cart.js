@@ -57,3 +57,19 @@ export function removeFromCart(productId){
 
     saveToStorage();
 }
+//update delivery dates according to the options selected
+export function updateDeliveryOption(productId,deliveryOptionId){
+    let matchingItem;
+
+    cart.forEach((cartItem) =>{
+        if(productId === cartItem.productId){
+            //To check if the product is in the cart
+            matchingItem = cartItem;
+        }
+    });
+    // updating the delivery option to display the exact date
+    matchingItem.deliveryOptionId = deliveryOptionId;
+
+    saveToStorage();
+
+}
