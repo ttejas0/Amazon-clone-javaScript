@@ -1,16 +1,9 @@
 import {cart, removeFromCart, updateDeliveryOption} from '../../data/cart.js';
 import { products, getProduct } from '../../data/products.js';
 import { formatCurrency } from '../utils/money.js';
-import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js'; 
-
-
-hello();
-
-const today = dayjs();
-const deleveryDate = today.add(7,'days');
-console.log(deleveryDate.format('dddd, MMMM D'));
+import { renderPaymentSummary } from './paymentsSummary.js';
 
 export function renderOrderSummary(){
 
@@ -119,28 +112,47 @@ export function renderOrderSummary(){
     }
 
 
-    document.querySelector('.js-order-summary')
-        .innerHTML = cartSummaryHTML;
+// Update the order summary section in the DOM with the generated cart summary HTML
+document.querySelector('.js-order-summary')
+    .innerHTML = cartSummaryHTML;
 
-    document.querySelectorAll('.js-delete-link')
-        .forEach((link) => {
-            link.addEventListener('click', () => {
+// Add click event listeners to all delete links in the cart
+document.querySelectorAll('.js-delete-link')
+    .forEach((link) => {
+        link.addEventListener('click', () => {
+            // Retrieve the product ID from the delete link's data attribute
             const productId = link.dataset.productId;
+
+            // Call a function to remove the product from the cart
             removeFromCart(productId);
 
+            // Find the container for this specific cart item and remove it from the DOM
             const container = document.querySelector(
                 `.js-cart-item-container-${productId}`
             );
             container.remove();
-            });
-        });
 
-        document.querySelectorAll('.js-delivery-option')
-            .forEach((element) => {
-                element.addEventListener('click', () => {
-                    const {productId, deliveryOptionId} = element.dataset;
-                    updateDeliveryOption(productId, deliveryOptionId);
-                    renderOrderSummary();
-                });
-            });
+            // Recalculate and update the payment summary after removing the item
+            renderPaymentSummary();
+        });
+    });
+
+// Add click event listeners to all delivery option radio buttons
+document.querySelectorAll('.js-delivery-option')
+    .forEach((element) => {
+        element.addEventListener('click', () => {
+            // Retrieve the product ID and delivery option ID from the radio button's data attributes
+            const { productId, deliveryOptionId } = element.dataset;
+
+            // Call a function to update the delivery option for the specified product
+            updateDeliveryOption(productId, deliveryOptionId);
+
+            // Recalculate and update the order summary to reflect the new delivery option
+            renderOrderSummary();
+
+            // Recalculate and update the payment summary to include the new delivery cost
+            renderPaymentSummary();
+        });
+    });
+
 }
