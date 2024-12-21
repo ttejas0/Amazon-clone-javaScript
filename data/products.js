@@ -1,3 +1,15 @@
+export function getProduct(productId){
+  let matchingProduct;
+        // searching products based on the id to gather other values
+        products.forEach((product) =>{
+            // here we can create another array for storing product details but its better to import data from products.js. this is called data deduplication or normalizing data 
+            if(product.id === productId){
+                matchingProduct = product;
+            }
+        });
+  return matchingProduct;
+}
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
