@@ -1,5 +1,5 @@
 import { cart, addToCart } from "../data/cart.js";
-import { products } from "../data/products.js";
+import { products, loadProducts } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
 /*
@@ -48,91 +48,95 @@ const products = [{
 
 */
 
+// 👇 This is called a callBack
+loadProducts(renderProductGrid);
 
-//👇 Accumulator pattern
-let productsHTML = '';
+function renderProductGrid(){
+    //👇 Accumulator pattern
+    let productsHTML = '';
 
-/*👇 This forEach function takes each element from the array "products" stores it in the parameter called product and then runs the function. */
-products.forEach((product) => {
-    productsHTML += `
-        <div class="product-container">
-            <div class="product-image-container">
-                <img class="product-image"
-                src="${product.image}">
-            </div>
-
-            <div class="product-name limit-text-to-2-lines">
-                ${product.name}
-            </div>
- 
-            <div class="product-rating-container">
-                <img class="product-rating-stars"
-                src="${product.getStarsUrl1()}">
-                <div class="product-rating-count link-primary">
-                ${product.rating.count}
+    /*👇 This forEach function takes each element from the array "products" stores it in the parameter called product and then runs the function. */
+    products.forEach((product) => {
+        productsHTML += `
+            <div class="product-container">
+                <div class="product-image-container">
+                    <img class="product-image"
+                    src="${product.image}">
                 </div>
-            </div>
 
-            <div class="product-price">
-                ${product.getPrice()}
-            </div>
+                <div class="product-name limit-text-to-2-lines">
+                    ${product.name}
+                </div>
+    
+                <div class="product-rating-container">
+                    <img class="product-rating-stars"
+                    src="${product.getStarsUrl1()}">
+                    <div class="product-rating-count link-primary">
+                    ${product.rating.count}
+                    </div>
+                </div>
 
-            <div class="product-quantity-container">
-                <select>
-                <option selected value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                </select>
-            </div>
+                <div class="product-price">
+                    ${product.getPrice()}
+                </div>
 
-            ${product.extraInfoHTML()}
+                <div class="product-quantity-container">
+                    <select>
+                    <option selected value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    </select>
+                </div>
 
-            <div class="product-spacer"></div>
+                ${product.extraInfoHTML()}
 
-            <div class="added-to-cart">
-                <img src="images/icons/checkmark.png">
-                Added
-            </div>
+                <div class="product-spacer"></div>
 
-            <button class="add-to-cart-button button-primary js-add-to-cart"
-            data-product-id="${product.id}">
-                Add to Cart
-            </button>
-            </div>
-    `;
+                <div class="added-to-cart">
+                    <img src="images/icons/checkmark.png">
+                    Added
+                </div>
 
-});
-//bringing the html element into JS to make changes to it
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
+                <button class="add-to-cart-button button-primary js-add-to-cart"
+                data-product-id="${product.id}">
+                    Add to Cart
+                </button>
+                </div>
+        `;
 
-function updateCartQuantity() {
-    let cartQuantity = 0;
-
-         // Calculating cart quantity by looping the cart array
-        cart.forEach((cartItem) =>{
-            cartQuantity += cartItem.quantity;
-            
-        });
-
-        document.querySelector('.js-cart-quantity')
-            .innerHTML = cartQuantity;
-
-}
-
-//List of all add to cart buttons in the page
-document.querySelectorAll('.js-add-to-cart')
-    .forEach((button) => {
-        button.addEventListener('click', () =>{
-            //This give all the data attached to the button
-           const productId =button.dataset.productId;
-            addToCart(productId);
-            updateCartQuantity();
-        });
     });
+    //bringing the html element into JS to make changes to it
+    document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+    function updateCartQuantity() {
+        let cartQuantity = 0;
+
+            // Calculating cart quantity by looping the cart array
+            cart.forEach((cartItem) =>{
+                cartQuantity += cartItem.quantity;
+                
+            });
+
+            document.querySelector('.js-cart-quantity')
+                .innerHTML = cartQuantity;
+
+    }
+
+    //List of all add to cart buttons in the page
+    document.querySelectorAll('.js-add-to-cart')
+        .forEach((button) => {
+            button.addEventListener('click', () =>{
+                //This give all the data attached to the button
+            const productId =button.dataset.productId;
+                addToCart(productId);
+                updateCartQuantity();
+            });
+        });
+}
